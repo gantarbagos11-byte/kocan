@@ -417,11 +417,11 @@ async def _run_kick_job(job_id, room, targets, socket_entries, loops, burst, com
             b1, b2 = combo_bursts[combo]
             combo_waves = max((len(targets) + b1 - 1) // b1, (len(targets) + b2 - 1) // b2)
             total_per_socket = sum(min(b1, max(0, len(targets) - i*b1)) for i in range((len(targets)+b1-1)//b1)) + sum(min(b2, max(0, len(targets) - i*b2)) for i in range((len(targets)+b2-1)//b2))
-            total_jobs = loops * total_per_socket * len(sockets)
+            total_jobs = loops * total_per_socket * len(socket_entries)
             per_socket_total = loops * total_per_socket
         else:
             combo_waves = 0
-            total_jobs = loops * len(targets) * len(sockets)
+            total_jobs = loops * len(targets) * len(socket_entries)
             per_socket_total = loops * len(targets)
         socket_stats = {
             ws_name: {"totalJobs": per_socket_total, "dispatchedJobs": 0, "failedJobs": 0, "lastTarget": "", "lastLoop": 0}
