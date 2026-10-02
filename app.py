@@ -5,6 +5,8 @@ from pathlib import Path
 
 from aiohttp import web, ClientSession, ClientWSTimeout, WSMsgType
 
+from pattern_engine import PatternEngine
+
 ROOT = Path(__file__).resolve().parent / "public"
 API_URL = "wss://developer.mig33.id/developer/ws"
 SUBPROTOCOL = "mig33.developer.ws.v1"
@@ -412,17 +414,9 @@ async def kick_loop(request):
     }, status=202)
 
 async def _run_kick_job(job_id, room, targets, socket_entries, loops, burst, combo, delay_target, delay_batch):
-        combo_bursts = {"combo1": (2, 3), "combo2": (3, 4)}
-        if combo in combo_bursts:
-            b1, b2 = combo_bursts[combo]
-            combo_waves = max((len(targets) + b1 - 1) // b1, (len(targets) + b2 - 1) // b2)
-            total_per_socket = sum(min(b1, max(0, len(targets) - i*b1)) for i in range((len(targets)+b1-1)//b1)) + sum(min(b2, max(0, len(targets) - i*b2)) for i in range((len(targets)+b2-1)//b2))
-            total_jobs = loops * total_per_socket * len(socket_entries)
-            per_socket_total = loops * total_per_socket
-        else:
-            combo_waves = 0
-            total_jobs = loops * len(targets) * len(socket_entries)
-            per_socket_total = loops * len(targets)
+        pattern = PatternEngine(targets, burst=burst, combo=combo)
+        total_jobs = loops * pattern.jobs_per_socket() * len(socket_entries)
+        per_socket_total = loops * pattern.jobs_per_socket()
         socket_stats = {
             ws_name: {"totalJobs": per_socket_total, "dispatchedJobs": 0, "failedJobs": 0, "lastTarget": "", "lastLoop": 0}
             for ws_name, _ in socket_entries
@@ -534,32 +528,16 @@ async def _run_kick_job(job_id, room, targets, socket_entries, loops, burst, com
                 return
 
         for loop_no in range(loops):
-            if combo in combo_bursts:
-                b1, b2 = combo_bursts[combo]
-                batches1 = [targets[i:i+b1] for i in range(0, len(targets), b1)]
-                batches2 = [targets[i:i+b2] for i in range(0, len(targets), b2)]
-                # Dua pola BRUTE berjalan bersamaan pada setiap wave, lalu wave berikutnya
-                # bergantian. COMBO1 = BRUTE2 + BRUTE3, COMBO2 = BRUTE3 + BRUTE4.
-                for wave in range(max(len(batches1), len(batches2))):
-                    jobs = []
-                    if wave < len(batches1):
-                        jobs.extend(run_one(ws, ws_name, target, loop_no)
-                                    for ws_name, ws in socket_entries for target in batches1[wave])
-                    if wave < len(batches2):
-                        jobs.extend(run_one(ws, ws_name, target, loop_no)
-                                    for ws_name, ws in socket_entries for target in batches2[wave])
-                    if jobs:
-                        await asyncio.gather(*jobs, return_exceptions=True)
-                    if wave + 1 < max(len(batches1), len(batches2)) and delay_target:
-                        await asyncio.sleep(delay_target)
-            else:
-                for start in range(0, len(targets), burst):
-                    batch = targets[start:start + burst]
-                    jobs = [run_one(ws, ws_name, target, loop_no)
-                            for ws_name, ws in socket_entries for target in batch]
+            for wave_index, wave in enumerate(pattern.waves()):
+                jobs = [
+                    run_one(ws, ws_name, target, loop_no)
+                    for ws_name, ws in socket_entries
+                    for target in wave
+                ]
+                if jobs:
                     await asyncio.gather(*jobs, return_exceptions=True)
-                    if start + burst < len(targets) and delay_target:
-                        await asyncio.sleep(delay_target)
+                if wave_index + 1 < pattern.wave_count() and delay_target:
+                    await asyncio.sleep(delay_target)
             if loop_no + 1 < loops and delay_batch:
                 await asyncio.sleep(delay_batch)
 
