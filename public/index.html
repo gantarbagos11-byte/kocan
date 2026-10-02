@@ -51,6 +51,33 @@ html{background:#020617}body{font-family:Inter,ui-sans-serif,system-ui,-apple-sy
 
 .setting-row{display:grid;gap:8px;align-items:end}.troop-row{grid-template-columns:minmax(0,2fr) minmax(72px,.8fr) minmax(72px,.8fr) minmax(118px,1.1fr)}.pass-row{grid-template-columns:minmax(0,3fr) minmax(118px,1fr);margin-top:9px}.save-row{grid-template-columns:minmax(0,3fr) minmax(90px,1fr) minmax(90px,1fr)}.setting-row .field{min-width:0}.setting-row input,.setting-row button{width:100%;min-width:0}.setting-row button{white-space:nowrap}
 @media(max-width:560px){.wrap{padding:8px}.troop-row{grid-template-columns:minmax(0,1.65fr) minmax(58px,.7fr) minmax(58px,.7fr) minmax(94px,1fr)}.save-row{grid-template-columns:minmax(0,2fr) minmax(70px,.75fr) minmax(70px,.75fr)}.pass-row{grid-template-columns:minmax(0,2fr) minmax(94px,1fr)}.setting-row{gap:6px}.setting-row input,.setting-row button{font-size:12px;padding-left:8px;padding-right:8px}}
+
+
+/* ===== MOBILE NEON UI V2 ===== */
+:root{--neon-cyan:#16d9ff;--neon-blue:#278cff;--neon-violet:#7357ff;--neon-green:#20e78a;--glass:rgba(7,18,39,.82);--glass2:rgba(4,13,29,.88)}
+html,body{min-height:100%;background:#020815}
+body{background:radial-gradient(700px 420px at 50% -80px,rgba(0,145,255,.20),transparent 62%),radial-gradient(520px 420px at 100% 28%,rgba(111,71,255,.18),transparent 65%),linear-gradient(180deg,#031024 0%,#020714 48%,#01040b 100%);color:#f7fbff;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.25;background:linear-gradient(125deg,transparent 0 58%,rgba(26,141,255,.08) 58.2% 59%,transparent 59.2% 68%,rgba(113,76,255,.06) 68.2% 69%,transparent 69.2%);z-index:-1}
+.wrap{max-width:980px;padding:14px 16px 24px}
+.hero{padding:12px 4px 16px;margin-bottom:8px}
+.brand-wrap{gap:14px}.brand-mark{width:112px;height:78px;background:transparent;box-shadow:none}.brand-mark img{filter:drop-shadow(0 8px 14px rgba(0,150,255,.22))}.top h1{font-size:29px;line-height:1;font-weight:950;letter-spacing:2px}.brand-sub{font-size:11px;letter-spacing:2px;color:#8dbfff;margin-top:6px}.hero-chip{min-width:122px;justify-content:center;padding:10px 14px;border-radius:999px;border:1px solid rgba(32,231,138,.5);background:rgba(10,55,45,.22);font-size:12px;box-shadow:0 0 24px rgba(32,231,138,.08),inset 0 1px rgba(255,255,255,.08)}.hero-dot{width:10px;height:10px}
+.tabs{margin-bottom:14px;padding:5px;border-radius:19px;background:rgba(2,8,20,.78);border:1px solid rgba(103,142,204,.20);box-shadow:0 14px 34px rgba(0,0,0,.30),inset 0 1px rgba(255,255,255,.04)}.tab-btn{min-height:56px;border-radius:15px;font-size:16px;font-weight:900;letter-spacing:1.4px}.tab-btn.active{background:linear-gradient(105deg,#13bdf5 0%,#376cff 45%,#7248ff 100%);box-shadow:0 10px 30px rgba(39,140,255,.28),inset 0 1px rgba(255,255,255,.28)}.tab-btn.active:before{content:"⚙";margin-right:10px}.tab-btn#tabDuel.active:before{content:"⚔"}.tab-btn.active:after{left:22%;right:22%;bottom:5px;height:3px}
+.panel{background:linear-gradient(145deg,rgba(7,24,49,.86),rgba(3,11,25,.90));border:1px solid rgba(22,183,255,.30);border-radius:19px;padding:16px;margin-bottom:13px;box-shadow:0 16px 38px rgba(0,0,0,.28),0 0 30px rgba(0,111,255,.055),inset 0 1px rgba(255,255,255,.045);backdrop-filter:blur(18px)}.panel:after{content:"";position:absolute;left:18px;right:18px;top:0;height:1px;background:linear-gradient(90deg,transparent,rgba(36,201,255,.65),transparent);opacity:.75}
+.section-heading{position:relative;display:flex;align-items:center;gap:11px;margin:0 0 14px;padding:1px 0 12px;border-bottom:1px solid rgba(54,116,190,.20)}.section-heading .section-icon{width:34px;height:34px;display:grid;place-items:center;border-radius:11px;background:rgba(0,190,255,.09);color:#45d9ff;font-size:22px;filter:drop-shadow(0 0 9px rgba(22,217,255,.24))}.section-heading strong{display:block;font-size:17px;letter-spacing:.2px;color:#eaf8ff}.section-heading small{display:block;margin-top:3px;color:#7ea4c9;font-size:10px;letter-spacing:.2px}.compact-heading{margin-bottom:10px}.troop-heading{align-items:center}.count-pill{margin-left:auto;border:1px solid rgba(32,231,138,.55);background:rgba(32,231,138,.06);color:#5df3ac;border-radius:999px;padding:7px 11px;font-size:10px;font-weight:900;white-space:nowrap}
+.field label,.listtitle span{color:#8eb0d3!important;font-size:10px!important;font-weight:900;letter-spacing:1.1px}.field label{margin-bottom:6px}
+input,select{min-height:48px;background:linear-gradient(180deg,rgba(3,14,31,.94),rgba(2,9,21,.92));border:1px solid rgba(69,130,202,.42);border-radius:13px;box-shadow:inset 0 1px rgba(255,255,255,.025),0 0 0 1px rgba(0,0,0,.12);font-size:14px}input:focus,select:focus{border-color:rgba(22,217,255,.8);box-shadow:0 0 0 3px rgba(22,217,255,.10),0 0 20px rgba(22,140,255,.10)}
+button{min-height:48px;border-radius:13px;font-size:12px;font-weight:900;letter-spacing:.45px;background:linear-gradient(180deg,#152b48,#0b1930);border:1px solid rgba(85,145,208,.32);box-shadow:0 8px 18px rgba(0,0,0,.22),inset 0 1px rgba(255,255,255,.08)}button.primary{background:linear-gradient(110deg,#11c6f6,#3c72ff 52%,#7547ff);box-shadow:0 10px 24px rgba(39,140,255,.24),inset 0 1px rgba(255,255,255,.22)}button.danger{background:linear-gradient(110deg,#ef476f,#bd214c);box-shadow:0 10px 24px rgba(220,38,90,.20)}button.green{background:linear-gradient(110deg,#16d98a,#079b79);box-shadow:0 10px 24px rgba(32,231,138,.15)}
+.troop-row{grid-template-columns:minmax(0,2fr) minmax(74px,.72fr) minmax(74px,.72fr) minmax(128px,1fr)}.pass-row{grid-template-columns:minmax(0,3fr) minmax(128px,1fr)}.save-row{grid-template-columns:minmax(0,3fr) minmax(100px,1fr) minmax(100px,1fr)}
+#rows{margin-top:2px}table{border:1px solid rgba(53,116,187,.24);border-radius:15px;background:rgba(2,10,23,.58)}th{padding:11px 9px;background:rgba(17,43,74,.44);color:#83a7cc;font-size:9px}td{padding:8px 9px;border-bottom-color:rgba(52,96,145,.25)}td input{min-height:40px;padding:8px 10px;background:rgba(2,10,23,.74)}#rows tr:last-child td{border-bottom:0}
+.status-balloon{width:12px;height:12px}.status-balloon.online{box-shadow:0 0 0 3px rgba(32,231,138,.12),0 0 14px rgba(32,231,138,.48)}
+.login-actions{margin-top:13px}.login-actions button{min-height:50px}
+.lists-grid{gap:10px;margin-top:0}#userList,#targetList{height:230px;background:rgba(1,8,19,.74);border:1px solid rgba(58,119,183,.30);border-radius:14px;padding:6px}.listtitle{min-height:34px}.listtitle span:first-child{color:#a9c9e8!important;font-size:11px!important}.listtitle span:last-child{color:#4fdfff!important;font-weight:900}
+#userList .user-item,#targetList .target-item{padding:10px;border-bottom-color:rgba(58,101,145,.25)}#userList .user-check{width:20px;height:20px;accent-color:#22baff}
+.roomrow{grid-template-columns:minmax(0,1fr) 100px 100px 100px;margin-top:11px}.room-timer-row{grid-template-columns:1fr 1.35fr 62px}.duel-settings-row{grid-template-columns:1fr 1fr 1fr 1.25fr}.kick-mode-layout{grid-template-columns:minmax(0,1fr) minmax(135px,.55fr);gap:10px}.kick-mode-stack{gap:9px}.kickall-side{min-height:105px;background:linear-gradient(135deg,#f04469,#a91649);box-shadow:0 14px 28px rgba(239,68,68,.22),inset 0 1px rgba(255,255,255,.15);font-size:15px}.kick-progress{gap:12px}.kick-socket{border-radius:12px;background:linear-gradient(145deg,rgba(9,28,52,.88),rgba(2,10,22,.88));border-color:rgba(67,129,193,.25)}
+.reset-timer{background:linear-gradient(135deg,#174f83,#17304e);font-size:24px!important}.suicide-off,.suicide-on{min-height:48px}
+@media(max-width:700px){.wrap{padding:9px 10px 20px}.hero{padding:7px 1px 13px}.brand-mark{width:74px;height:58px}.top h1{font-size:24px}.brand-sub{font-size:9px}.hero-chip{min-width:106px;padding:9px 11px;font-size:10px}.tabs{margin-bottom:11px}.tab-btn{min-height:50px;font-size:14px}.panel{padding:13px;border-radius:17px}.section-heading{margin-bottom:11px}.section-heading strong{font-size:15px}.section-heading small{font-size:9px}.section-icon{transform:scale(.92)}.troop-row{grid-template-columns:minmax(0,1.6fr) minmax(58px,.68fr) minmax(58px,.68fr) minmax(100px,.95fr)}.pass-row{grid-template-columns:minmax(0,2fr) minmax(104px,.9fr)}.save-row{grid-template-columns:minmax(0,2fr) minmax(74px,.72fr) minmax(74px,.72fr)}.roomrow{grid-template-columns:minmax(0,1fr) 78px 78px 78px}.roomrow .field button{font-size:9px}.duel-settings-row{grid-template-columns:1fr 1fr 1fr 1.15fr}.kick-mode-layout{grid-template-columns:minmax(0,1fr) 115px}.kickall-side{min-height:91px;font-size:13px}.count-pill{padding:6px 9px}.kick-socket-reports{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.wrap{padding:8px}.hero{align-items:center}.brand-mark{width:62px;height:52px}.top h1{font-size:21px;letter-spacing:1.5px}.brand-sub{font-size:8px;letter-spacing:1.1px}.hero-chip{min-width:88px;padding:8px 9px;font-size:9px}.hero-dot{width:8px;height:8px}.panel{padding:11px;margin-bottom:9px}.section-heading .section-icon{width:30px;height:30px;font-size:19px}.section-heading strong{font-size:14px}.section-heading small{font-size:8px}.troop-row{grid-template-columns:minmax(0,1.55fr) minmax(54px,.68fr) minmax(54px,.68fr) minmax(94px,.9fr)}.pass-row{grid-template-columns:minmax(0,1.8fr) minmax(96px,.9fr)}.save-row{grid-template-columns:minmax(0,1.8fr) minmax(70px,.7fr) minmax(70px,.7fr)}input,select{min-height:44px;font-size:13px}.setting-row input,.setting-row button{font-size:11px;padding-left:7px;padding-right:7px}.roomrow{grid-template-columns:minmax(0,1fr) 66px 66px 66px}.roomrow .field button{font-size:8px;letter-spacing:.1px}.room-timer-row{grid-template-columns:1fr 1.25fr 48px}.duel-settings-row{grid-template-columns:1fr 1fr 1fr 1.05fr}.kick-mode-layout{grid-template-columns:minmax(0,1fr) 105px}.kickall-side{min-height:84px;font-size:12px}.lists-grid{gap:7px}#userList,#targetList{height:205px}th{font-size:8px;padding:9px 5px}td{padding:6px 5px}td input{font-size:10px;padding:7px 6px}.count-pill{font-size:8px}.login-actions button{min-height:46px}}
+@media(max-width:390px){.wrap{padding:7px}.brand-mark{width:56px;height:48px}.top h1{font-size:19px}.hero-chip{min-width:80px;font-size:8px}.troop-row{grid-template-columns:minmax(0,1.4fr) minmax(50px,.65fr) minmax(50px,.65fr) minmax(88px,.85fr)}.save-row{grid-template-columns:minmax(0,1fr) 66px 66px}.pass-row{grid-template-columns:minmax(0,1fr) 90px}.roomrow{grid-template-columns:minmax(0,1fr) 59px 59px 59px}.duel-settings-row{grid-template-columns:1fr 1fr 1fr 1fr}.kick-mode-layout{grid-template-columns:minmax(0,1fr) 96px}.kickall-side{font-size:11px}.section-heading small{display:none}}
 </style>
 </head>
 <body>
@@ -72,20 +99,22 @@ html{background:#020617}body{font-family:Inter,ui-sans-serif,system-ui,-apple-sy
   </div>
 
   <section id="panelSetting" class="tab-panel active" role="tabpanel">
-  <div class="panel">
+  <div class="panel section-card login-troop-card">
+    <div class="section-heading"><div class="section-icon">👥</div><div><strong>Login Troop</strong><small>Atur username dan password troop</small></div></div>
     <div class="setting-row troop-row">
       <div class="field"><label for="nametroop">NameTroop</label><input id="nametroop" placeholder="contoh: tai" autocomplete="off"></div>
       <div class="field"><label for="start">Awal</label><input id="start" type="text" inputmode="numeric" pattern="\d*" value="00" maxlength="3"></div>
       <div class="field"><label for="end">Akhir</label><input id="end" type="text" inputmode="numeric" pattern="\d*" value="99" maxlength="3"></div>
-      <div class="field"><label>&nbsp;</label><button id="generateTroop" class="primary">SETTROOP</button></div>
+      <div class="field"><label>&nbsp;</label><button id="generateTroop" class="primary">GENERATE</button></div>
     </div>
     <div class="setting-row pass-row">
       <div class="field"><label for="passwordAll">PasswordAll</label><input id="passwordAll" type="password" placeholder="Password semua ID" autocomplete="new-password"></div>
-      <div class="field"><label>&nbsp;</label><button id="setPass">SETPASS</button></div>
+      <div class="field"><label>&nbsp;</label><button id="setPass">SET PASS</button></div>
     </div>
   </div>
 
-  <div class="panel">
+  <div class="panel section-card save-card">
+    <div class="section-heading"><div class="section-icon">☁️</div><div><strong>Save / Load</strong><small>Simpan atau muat konfigurasi troop</small></div></div>
     <div class="setting-row save-row">
       <div class="field"><label for="saveLoad">SaveLoad</label><input id="saveLoad" value="multi1" placeholder="Nama simpanan, contoh: multi1" autocomplete="off"><input id="loadFile" type="file" accept=".json,application/json" style="display:none"></div>
       <div class="field"><label>&nbsp;</label><button id="saveConfig" class="primary">SAVE</button></div>
@@ -93,7 +122,8 @@ html{background:#020617}body{font-family:Inter,ui-sans-serif,system-ui,-apple-sy
     </div>
   </div>
 
-  <div class="panel">
+  <div class="panel section-card troop-table-card">
+    <div class="section-heading troop-heading"><div class="section-icon">👥</div><div><strong>Daftar Troop (10)</strong><small>Username &amp; password troop</small></div><span class="count-pill">10 / 10</span></div>
     <table>
       <thead><tr><th>#</th><th>Username</th><th>Password / Saldo</th><th>Status</th></tr></thead>
       <tbody id="rows"></tbody>
@@ -110,7 +140,8 @@ html{background:#020617}body{font-family:Inter,ui-sans-serif,system-ui,-apple-sy
   </section>
 
   <section id="panelDuel" class="tab-panel" role="tabpanel">
-  <div class="panel">
+  <div class="panel section-card room-users-card">
+    <div class="section-heading"><div class="section-icon">👥</div><div><strong>Room &amp; User List</strong><small>Masukkan room lalu ambil daftar user</small></div></div>
     <div class="lists-grid">
       <div>
         <div class="listtitle"><span>USER</span><span id="userCount">0</span></div>
@@ -125,8 +156,9 @@ html{background:#020617}body{font-family:Inter,ui-sans-serif,system-ui,-apple-sy
       <div class="field"><label for="room">Room</label><input id="room" placeholder="MIG33" autocomplete="off"></div>
       <div class="field"><label>&nbsp;</label><button id="enterAll">ENTER ALL</button></div>
       <div class="field"><label>&nbsp;</label><button id="leaveAll">LEAVE ALL</button></div>
-      <div class="field"><label>&nbsp;</label><button id="listRoom" class="green">LISTUSER</button></div>
+      <div class="field"><label>&nbsp;</label><button id="listRoom" class="green">LIST USER</button></div>
     </div>
+    <div class="section-heading compact-heading"><div class="section-icon">⏱️</div><div><strong>Status &amp; Timer</strong><small>Timer berjalan berdasarkan event room</small></div></div>
     <div class="room-timer-row">
       <div class="field"><label for="timerKickall">Timer KickAll</label><input id="timerKickall" type="number" min="0" value="900"></div>
       <div class="field countdown-field"><label for="countdown">COUNTDOWN</label><input id="countdown" type="number" min="0" value="60000" readonly></div>
@@ -143,12 +175,13 @@ html{background:#020617}body{font-family:Inter,ui-sans-serif,system-ui,-apple-sy
         <div class="field"><label for="burstKick">BRUTE</label><select id="burstKick"><option value="0">OFF</option><option value="1">BRUTE1</option><option value="2">BRUTE2</option><option value="3">BRUTE3</option><option value="4">BRUTE4</option><option value="5">BRUTE5</option><option value="6">BRUTE6</option><option value="7">BRUTE7</option><option value="8">BRUTE8</option><option value="9">BRUTE9</option><option value="10">BRUTE10</option></select></div>
         <div class="field"><label for="comboKick">COMBO</label><select id="comboKick"><option value="off">OFF</option><option value="combo1">COMBO1 · BRUTE2 + BRUTE3</option><option value="combo2">COMBO2 · BRUTE3 + BRUTE4</option></select></div>
       </div>
-      <div style="display:flex;flex-direction:column;gap:6px"><button id="kickAll" class="danger kickall-side">KICKALL</button><button id="sandboxKick" title="Local simulation only; tidak mengirim ke WebSocket upstream">🧪 SANDBOX TEST</button></div>
+      <div style="display:flex;flex-direction:column;gap:6px"><button id="kickAll" class="danger kickall-side">KICK ALL</button><button id="sandboxKick" title="Local simulation only; tidak mengirim ke WebSocket upstream">🧪 SANDBOX TEST</button></div>
     </div>
   </div>
 
 
-  <div class="panel">
+  <div class="panel section-card kick-live-card">
+    <div class="section-heading compact-heading"><div class="section-icon">🚀</div><div><strong>Live Kick</strong><small>Progress per WebSocket</small></div></div>
     <div class="kick-progress">
       <div class="kick-progress-head"><span>LIVE KICK — PER WEBSOCKET</span><span id="kickProgressStatus" class="kick-progress-done">IDLE</span></div>
       <div id="kickSocketReports" class="kick-socket-reports"></div>
