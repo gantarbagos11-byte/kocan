@@ -43,3 +43,9 @@ Buka:
   `tai00`, `tai11`, `tai22`, `tai33`, `tai44`, `tai55`, `tai66`, `tai77`, `tai88`, `tai99`.
 - Rentang normal tetap menghasilkan tepat 10 akun, misalnya `01-10`, `11-20`, `91-100`.
 - SaveLoad default `multi1`.
+
+
+## v6 sync fix
+- Auto-target keeps all eligible members of a matching numeric family when fewer than 10 remain, instead of requiring a consecutive run.
+- Confirmed kicked usernames are purged from TARGET, USER, and every WS participant snapshot and cannot be resurrected by later WS responses.
+- Direct upstream kicked event forms are also handled.

@@ -38,6 +38,19 @@ function kickEventData(m){const d=m?.data&&typeof m.data==="object"?m.data:m||{}
   target:String(m?.target_username??d?.target_username??d?.username??d?.target??"").trim(),
   time:String(m?.time??d?.time??d?.timestamp??"").trim()
 }}
+function isConfirmedKickEvent(m){
+  const d=kickEventData(m);
+  if(!d.target)return false;
+  const exact=new Set([
+    "room.participant.kicked","room.member.kicked","room.user.kicked",
+    "participant.kicked","member.kicked","user.kicked"
+  ]);
+  if(exact.has(d.type))return true;
+  if(d.type.includes("vote")||d.type==="room.kick.result"||d.type==="room.command.result")return false;
+  return ["has been kicked","was kicked","have been kicked","kicked from the room"]
+    .some(x=>d.status.includes(x));
+}
+
 function isKickEvent(m){
   const d=kickEventData(m);
   if(!d.type)return false;
@@ -164,10 +177,14 @@ function removeConfirmedKickedTarget(username){
   const key=username.toLowerCase();
   confirmedKickedTargets.add(key);
 
-  [...targetList.querySelectorAll(".target-item")]
-    .filter(o=>String(o.dataset.username||"").trim().toLowerCase()===key)
-    .forEach(o=>o.remove());
+  // Remove from TARGET immediately.
+  [...targetList.querySelectorAll(".target-item")].forEach(row=>{
+    const value=String(row.dataset.username||row.textContent||"").trim().toLowerCase();
+    if(value===key)row.remove();
+  });
 
+  // Purge every participant snapshot first. A later WS response must not
+  // resurrect this username.
   participantUsers=(participantUsers||[]).filter(u=>String(u||"").trim().toLowerCase()!==key);
   if(Array.isArray(participantBySocket)){
     for(let i=0;i<participantBySocket.length;i++){
@@ -176,16 +193,26 @@ function removeConfirmedKickedTarget(username){
     }
   }
 
+  // Remove every possible USER row, including future/legacy row markup.
   [...userList.querySelectorAll(".user-item")].forEach(row=>{
-    const label=row.querySelector("span");
-    if(label && label.textContent.trim().toLowerCase()===key)row.remove();
+    const value=String(row.dataset.username||row.querySelector("span")?.textContent||row.textContent||"").trim().toLowerCase();
+    if(value===key)row.remove();
   });
 
+  // Rebuild USER from the cleaned snapshot so the count and empty-state stay
+  // consistent, while TARGET entries are preserved.
+  const cleaned=[...new Map((participantBySocket||[]).flat()
+    .map(x=>String(x||"").trim()).filter(Boolean)
+    .map(u=>[u.toLowerCase(),u])).values()]
+    .filter(u=>!confirmedKickedTargets.has(u.toLowerCase()));
+  participantUsers=cleaned;
+  showUsers(cleaned,false);
+
   updateTargetCount();
-  userCount.textContent=String(userList.querySelectorAll(".user-item").length);
-  log(0,`KICKED: ${username} dihapus dari USER dan TARGET`);
+  log(0,`KICKED: ${username} dihapus dari USER dan TARGET; snapshot WS dibersihkan`);
   return true;
 }
+
 function addTarget(username){
   const value=String(username||"").trim();
   if(!value)return false;
@@ -555,7 +582,7 @@ function handleParticipants(m,i){
   return true;
 }
 // Patch each socket handler to also process room participant results.
-function loginOne(i){const c=clients[i],x=cred(i);if(!x.username||!x.password){log(i,"Username/password kosong");return}c.intentionalClose=false;c.loggedIn=false;c.inRoom=false;c.balance=null;setBalance(i,"—");stopPing(i);if(c.ws)try{c.ws.close()}catch(e){}status(i,"CONNECTING","connecting");log(i,"Connecting local proxy...");const ws=new WebSocket(`${location.protocol === "https:" ? "wss" : "ws"}://${location.host}/ws`);c.ws=ws;ws.onopen=()=>log(i,"Proxy OPEN; menunggu auth.required");ws.onmessage=e=>{let m;try{m=JSON.parse(e.data)}catch(_){log(i,"RECV non-JSON");return}updateBalanceFromMessage(i,m);if(m.type==="kick.target.confirmed"){removeConfirmedKickedTarget(m.target_username);return}if(m.type==="kick.progress"){handleKickProgress(m);return}if(m.type==="proxy.error"){status(i,"PROXY ERROR","error");log(i,"PROXY ERROR: "+(m.data?.message||"unknown"));return}if(isKickEvent(m)){maybeSuicide(m);startCountdownFromKick(m)}if(handleParticipants(m,i))return;if(m.type==="auth.required"){log(i,"RECV auth.required");send(i,{type:"developer.login",username:x.username,password:x.password},true)}else if(m.type==="session.ready"){c.loggedIn=true;c.inRoom=false;status(i,"ONLINE","online");startPing(i);log(i,"LOGIN OK")}else if(m.type==="room.join.result"){const ok=m.ok===true||m.data?.ok===true||m.data?.joined===true||m.success===true;if(ok){c.inRoom=true;log(i,"ENTER ROOM OK");const r=roomEl.value.trim();if(r)send(i,{type:"room.participants",room:r},true)}else log(i,"ENTER ROOM RESULT "+JSON.stringify(m))}else if(m.type==="room.leave.result"){const ok=m.ok===true||m.data?.ok===true||m.data?.left===true||m.success===true;if(ok){c.inRoom=false;log(i,"LEAVE ROOM OK")}else log(i,"LEAVE ROOM RESULT "+JSON.stringify(m))}else if(m.type==="session.replaced"){c.loggedIn=false;c.inRoom=false;stopPing(i);status(i,"REPLACED","error")}else if(m.type==="error"){c.loggedIn=false;c.inRoom=false;stopPing(i);status(i,"ERROR","error");log(i,"API ERROR "+JSON.stringify(m))}};ws.onerror=()=>{status(i,"ERROR","error");log(i,"Local WebSocket proxy error")};ws.onclose=e=>{stopPing(i);c.loggedIn=false;c.inRoom=false;if(!c.intentionalClose)status(i,"CLOSED","offline");log(i,`CLOSED code=${e.code} reason=${e.reason||"-"}`)}};
+function loginOne(i){const c=clients[i],x=cred(i);if(!x.username||!x.password){log(i,"Username/password kosong");return}c.intentionalClose=false;c.loggedIn=false;c.inRoom=false;c.balance=null;setBalance(i,"—");stopPing(i);if(c.ws)try{c.ws.close()}catch(e){}status(i,"CONNECTING","connecting");log(i,"Connecting local proxy...");const ws=new WebSocket(`${location.protocol === "https:" ? "wss" : "ws"}://${location.host}/ws`);c.ws=ws;ws.onopen=()=>log(i,"Proxy OPEN; menunggu auth.required");ws.onmessage=e=>{let m;try{m=JSON.parse(e.data)}catch(_){log(i,"RECV non-JSON");return}updateBalanceFromMessage(i,m);if(m.type==="kick.target.confirmed"){removeConfirmedKickedTarget(m.target_username);return}if(isConfirmedKickEvent(m)){removeConfirmedKickedTarget(kickEventData(m).target);return}if(m.type==="kick.progress"){handleKickProgress(m);return}if(m.type==="proxy.error"){status(i,"PROXY ERROR","error");log(i,"PROXY ERROR: "+(m.data?.message||"unknown"));return}if(isKickEvent(m)){maybeSuicide(m);startCountdownFromKick(m)}if(handleParticipants(m,i))return;if(m.type==="auth.required"){log(i,"RECV auth.required");send(i,{type:"developer.login",username:x.username,password:x.password},true)}else if(m.type==="session.ready"){c.loggedIn=true;c.inRoom=false;status(i,"ONLINE","online");startPing(i);log(i,"LOGIN OK")}else if(m.type==="room.join.result"){const ok=m.ok===true||m.data?.ok===true||m.data?.joined===true||m.success===true;if(ok){c.inRoom=true;log(i,"ENTER ROOM OK");const r=roomEl.value.trim();if(r)send(i,{type:"room.participants",room:r},true)}else log(i,"ENTER ROOM RESULT "+JSON.stringify(m))}else if(m.type==="room.leave.result"){const ok=m.ok===true||m.data?.ok===true||m.data?.left===true||m.success===true;if(ok){c.inRoom=false;log(i,"LEAVE ROOM OK")}else log(i,"LEAVE ROOM RESULT "+JSON.stringify(m))}else if(m.type==="session.replaced"){c.loggedIn=false;c.inRoom=false;stopPing(i);status(i,"REPLACED","error")}else if(m.type==="error"){c.loggedIn=false;c.inRoom=false;stopPing(i);status(i,"ERROR","error");log(i,"API ERROR "+JSON.stringify(m))}};ws.onerror=()=>{status(i,"ERROR","error");log(i,"Local WebSocket proxy error")};ws.onclose=e=>{stopPing(i);c.loggedIn=false;c.inRoom=false;if(!c.intentionalClose)status(i,"CLOSED","offline");log(i,`CLOSED code=${e.code} reason=${e.reason||"-"}`)}};
 function syncBruteCombo(source){
   const brute=document.getElementById('burstKick');
   const combo=document.getElementById('comboKick');
