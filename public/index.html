@@ -829,10 +829,13 @@ async function kickAll(){
   else if(combo==='combo2') log(0,`KICKALL COMBO2: BRUTE3 + BRUTE4 berjalan bersamaan & berselingan | ${targets.length} target | loop=${cfg.loop}`);
   else log(0,`KICKALL mulai: ${targets.length} target | loop=${cfg.loop} | burst=${cfg.burst} | delayTarget=${cfg.delayTarget} | delayBatch=${cfg.delayBatch}`);
   try{
+    // The HTTP request only starts the backend job. Progress/completion arrive
+    // through the already-open browser WebSocket, so the UI does not wait for
+    // the entire duel cycle to finish.
     const r=await fetch('/api/kick-loop',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(cfg)});
     const d=await r.json().catch(()=>({}));
     if(!r.ok||d.ok===false)throw new Error(d.error||`HTTP ${r.status}`);
-    log(0,`KICKALL selesai/dijadwalkan: ${d.totalJobs??0} dispatch | WS aktif ${d.websockets??0}`);
+    log(0,`KICKALL diterima backend: job=${d.jobId||'-'} | ${d.targets??targets.length} target | WS ${d.websockets??0}`);
   }catch(e){log(0,'KICKALL ERROR: '+e.message)}
 }
 function setSuicide(enabled){
